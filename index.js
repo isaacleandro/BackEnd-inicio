@@ -10,9 +10,9 @@ const requestHandler = (req, res) => {
 
     if (url === '/cars' && req.method === 'GET') {
         const cars = [
-            { id: 1, brand: 'BMW', model: 'X5' },
-            { id: 2, brand: 'Audi', model: 'Q7' },
-            { id: 3, brand: 'Monza', model: 'SLE' }
+            { id: 1, brand: 'BMW', model: 'X5', cilinders: 400 },
+            { id: 2, brand: 'Audi', model: 'Q7', cilinders: 500 },
+            { id: 3, brand: 'Monza', model: 'SLE', cilinders: 180 }
         ]
 
         let response;
@@ -30,7 +30,7 @@ const requestHandler = (req, res) => {
         res.writeHead(200);
         res.end(JSON.stringify(response));
 
-    } else if (req.url === '/api' && req.method === 'POST') {
+    } else if (req.url === '/cars' && req.method === 'POST') {
         let body = '';
 
         req.on('data', chunk => {
@@ -40,13 +40,22 @@ const requestHandler = (req, res) => {
         req.on('end', () => {
             const data = JSON.parse(body);
 
-            const response = {
-                message: 'Data received sucessfully',
-                data: data,
-                timestamp: new Date().toISOString()
-            }; ''
+            if (!data?.brand || !data?.model || !data?.cilinders) {
+                res.writeHead(400);
+                res.end(JSON.stringify({ message: 'Bad request' }));
+                return;
+            }
 
-            res.writeHead(200);
+            const newCar = {
+                id: cars.length + 1,
+                brand: data.brand,
+                model: data.model,
+                cilinders: data.cilinders
+            };
+
+            cars.push(newCar);
+
+            res.writeHead(201);
             res.end(JSON.stringify(response));
         })
 
@@ -68,6 +77,6 @@ server.listen(PORT, () => {
 //Find = mostra apenas um
 //Every = verifica se todos sao true ou false
 //Reduce = acumula que for sendo verificado
-//Map = transforma em outro array ou modifica 
+//Map = transforma em outro array ou modifica
 //Sort = ordena
 
