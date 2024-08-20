@@ -3,18 +3,19 @@ const http = require('http');
 
 const PORT = 3000;
 
+let cars = [
+    { id: 1, brand: 'BMW', model: 'X5', cilinders: 400 },
+    { id: 2, brand: 'Audi', model: 'Q7', cilinders: 500 },
+    { id: 3, brand: 'Monza', model: 'SLE', cilinders: 180 }
+]
+
 const requestHandler = (req, res) => {
     res.setHeader('Content-Type', 'application/json');
 
     const url = req.url.split('?')[0];
 
     if (url === '/cars' && req.method === 'GET') {
-        const cars = [
-            { id: 1, brand: 'BMW', model: 'X5', cilinders: 400 },
-            { id: 2, brand: 'Audi', model: 'Q7', cilinders: 500 },
-            { id: 3, brand: 'Monza', model: 'SLE', cilinders: 180 }
-        ]
-
+       
         let response;
 
         if (Boolean(req.url.split('?')[1])) {
@@ -56,7 +57,7 @@ const requestHandler = (req, res) => {
             cars.push(newCar);
 
             res.writeHead(201);
-            res.end(JSON.stringify(response));
+            res.end(JSON.stringify(newCar));
         })
 
     } else {
